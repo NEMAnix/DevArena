@@ -2,19 +2,14 @@
 
 var React = require('react');
 var Link = require('react-router').Link;
-var LecturerApi = require('../../api/lecturerApi');
+var LecturerActions = require('../../actions/lecturerActions');
+var LecturerStore = require('../../stores/lecturerStore');
 var LecturerList = require('./LecturerList');
 
 var LecturerPage = React.createClass({
     getInitialState: function(){
         return {
-            lecturers: []
-        }
-    },
-    
-    componentDidMount: function(){
-        if (this.isMounted()){
-            this.setState ({ lecturers: LecturerApi.getAllLecturers() });
+            lecturers: LecturerStore.getAllLecturers()
         }
     },
     
