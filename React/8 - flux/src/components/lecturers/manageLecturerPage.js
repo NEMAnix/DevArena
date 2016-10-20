@@ -34,7 +34,13 @@ var ManageLecturerPage = React.createClass({
 
 	saveLecturer: function(event) {
 		event.preventDefault();
-		LecturerActions.createLecturer(this.state.lecturer);
+
+		if (this.state.lecturer.id){
+			LecturerActions.updateLecturer(this.state.lecturer);
+		}
+		else{
+			LecturerActions.createLecturer(this.state.lecturer);
+		}
 		appHistory.push('/lecturers')
 	},
 

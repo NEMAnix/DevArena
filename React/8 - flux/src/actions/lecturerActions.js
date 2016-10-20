@@ -12,6 +12,24 @@ var LecturerActions = {
             actionType: ActionTypes.CREATE_LECTURER,
             lecturer: newLecturer
         });
+    },
+
+    updateLecturer: function(lecturer) {
+        var updatedLecturer = LecturerApi.saveLecturer(lecturer);
+        
+        Dispatcher.dispatch({
+            actionType: ActionTypes.UPDATE_LECTURER,
+            lecturer: updatedLecturer
+        });
+    },
+
+    deleteLecturer: function(id) {
+    	LecturerApi.deleteLecturer(id);
+
+    	Dispatcher.dispatch({
+    		actionType: ActionTypes.DELETE_LECTURER,
+    		id: id
+    	});
     }
 };
 

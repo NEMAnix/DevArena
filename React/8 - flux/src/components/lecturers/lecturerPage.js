@@ -12,6 +12,18 @@ var LecturerPage = React.createClass({
             lecturers: LecturerStore.getAllLecturers()
         }
     },
+
+    componentWillMount: function(){
+        LecturerStore.addChangeListener(this._onChange);
+    },
+
+    componentWillUnmount: function(){
+        LecturerStore.removeChangeListener(this._onChange);
+    },
+
+    _onChange: function() {
+        this.setState ({ lecturers: LecturerStore.getAllLecturers() });
+    },
     
     render: function(){        
         return (

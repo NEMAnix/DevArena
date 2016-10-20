@@ -53900,6 +53900,44 @@ var Dispatcher = require('../dispatcher/appDispatcher');
 var LecturerApi = require('../api/lecturerApi');
 var ActionTypes = require('../constants/actionTypes')
 
+var LecturerActions = {
+    createLecturer: function(lecturer) {
+        var newLecturer = LecturerApi.saveLecturer(lecturer);
+        
+        Dispatcher.dispatch({
+            actionType: ActionTypes.CREATE_LECTURER,
+            lecturer: newLecturer
+        });
+    },
+
+    updateLecturer: function(lecturer) {
+        var updatedLecturer = LecturerApi.saveLecturer(lecturer);
+        
+        Dispatcher.dispatch({
+            actionType: ActionTypes.UPDATE_LECTURER,
+            lecturer: updatedLecturer
+        });
+    },
+
+    deleteLecturer: function(id) {
+    	LecturerApi.deleteLecturer(id);
+
+    	Dispatcher.dispatch({
+    		actionType: ActionTypes.DELETE_LECTURER,
+    		id: id
+    	});
+    }
+};
+
+module.exports = LecturerActions;
+
+},{"../api/lecturerApi":245,"../constants/actionTypes":255,"../dispatcher/appDispatcher":256}],243:[function(require,module,exports){
+'use strict';
+
+var Dispatcher = require('../dispatcher/appDispatcher');
+var LecturerApi = require('../api/lecturerApi');
+var ActionTypes = require('../constants/actionTypes')
+
 var InitializeActions = {
     initApp: function() {
         Dispatcher.dispatch({
@@ -53913,7 +53951,7 @@ var InitializeActions = {
 
 module.exports = InitializeActions;
 
-},{"../api/lecturerApi":244,"../constants/actionTypes":254,"../dispatcher/appDispatcher":255}],243:[function(require,module,exports){
+},{"../api/lecturerApi":245,"../constants/actionTypes":255,"../dispatcher/appDispatcher":256}],244:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('../dispatcher/appDispatcher');
@@ -53928,12 +53966,30 @@ var LecturerActions = {
             actionType: ActionTypes.CREATE_LECTURER,
             lecturer: newLecturer
         });
+    },
+
+    updateLecturer: function(lecturer) {
+        var updatedLecturer = LecturerApi.saveLecturer(lecturer);
+        
+        Dispatcher.dispatch({
+            actionType: ActionTypes.UPDATE_LECTURER,
+            lecturer: updatedLecturer
+        });
+    },
+
+    deleteLecturer: function(id) {
+    	LecturerApi.deleteLecturer(id);
+
+    	Dispatcher.dispatch({
+    		actionType: ActionTypes.DELETE_LECTURER,
+    		id: id
+    	});
     }
 };
 
 module.exports = LecturerActions;
 
-},{"../api/lecturerApi":244,"../constants/actionTypes":254,"../dispatcher/appDispatcher":255}],244:[function(require,module,exports){
+},{"../api/lecturerApi":245,"../constants/actionTypes":255,"../dispatcher/appDispatcher":256}],245:[function(require,module,exports){
 'use strict';
 
 //This file is mocking a web API by hitting hard coded data.
@@ -53985,7 +54041,7 @@ var LecturerApi = {
 
 module.exports = LecturerApi;
 
-},{"./lecturerData":245,"lodash":7}],245:[function(require,module,exports){
+},{"./lecturerData":246,"lodash":7}],246:[function(require,module,exports){
 module.exports = {
 	lecturers: 
 	[
@@ -54007,7 +54063,7 @@ module.exports = {
 	]
 };
 
-},{}],246:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 'use strict'
 
 var React = require('react');
@@ -54036,7 +54092,7 @@ var AboutPage = React.createClass({displayName: "AboutPage",
 
 module.exports = AboutPage;
 
-},{"react":241}],247:[function(require,module,exports){
+},{"react":241}],248:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -54058,7 +54114,7 @@ var App = React.createClass({displayName: "App",
 
 module.exports = App;
 
-},{"./common/header":248,"react":241,"react-router":39}],248:[function(require,module,exports){
+},{"./common/header":249,"react":241,"react-router":39}],249:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -54085,7 +54141,7 @@ var Header = React.createClass({displayName: "Header",
 
 module.exports = Header;
 
-},{"react":241,"react-router":39}],249:[function(require,module,exports){
+},{"react":241,"react-router":39}],250:[function(require,module,exports){
 'use strict'
 
 var React = require('react');
@@ -54103,21 +54159,28 @@ var HomePage = React.createClass({displayName: "HomePage",
 
 module.exports = HomePage;
 
-},{"react":241}],250:[function(require,module,exports){
+},{"react":241}],251:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
 var Link = require('react-router').Link;
+var LecturerActions = require('../../actions/LecturerActions');
 
 var LecturerList = React.createClass({displayName: "LecturerList",
     propTypes: {
         lecturers: React.PropTypes.array.isRequired
     },
 
+    deleteLecturer: function(id, event){
+        event.preventDefault();
+        LecturerActions.deleteLecturer(id);
+    },
+
     render: function(){
         var createLecturerRow = function(lecturer){
             return(
                 React.createElement("tr", {key: lecturer.id}, 
+                    React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.deleteLecturer.bind(this, lecturer.id)}, "Delete")), 
                     React.createElement("td", null, React.createElement(Link, {to: '/lecturer/' + lecturer.id}, lecturer.id)), 
                     React.createElement("td", null, lecturer.firstName, " ", lecturer.lastName)
                 )
@@ -54129,6 +54192,7 @@ var LecturerList = React.createClass({displayName: "LecturerList",
                 React.createElement("table", {className: "table"}, 
                     React.createElement("thead", null, 
                         React.createElement("tr", null, 
+                            React.createElement("th", null), 
                             React.createElement("th", null, "ID"), 
                             React.createElement("th", null, "Name")
                         )
@@ -54144,7 +54208,7 @@ var LecturerList = React.createClass({displayName: "LecturerList",
 
 module.exports = LecturerList;
 
-},{"react":241,"react-router":39}],251:[function(require,module,exports){
+},{"../../actions/LecturerActions":242,"react":241,"react-router":39}],252:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -54188,7 +54252,7 @@ var LecturerForm = React.createClass({displayName: "LecturerForm",
 
 module.exports = LecturerForm;
 
-},{"react":241}],252:[function(require,module,exports){
+},{"react":241}],253:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -54202,6 +54266,18 @@ var LecturerPage = React.createClass({displayName: "LecturerPage",
         return {
             lecturers: LecturerStore.getAllLecturers()
         }
+    },
+
+    componentWillMount: function(){
+        LecturerStore.addChangeListener(this._onChange);
+    },
+
+    componentWillUnmount: function(){
+        LecturerStore.removeChangeListener(this._onChange);
+    },
+
+    _onChange: function() {
+        this.setState ({ lecturers: LecturerStore.getAllLecturers() });
     },
     
     render: function(){        
@@ -54217,7 +54293,7 @@ var LecturerPage = React.createClass({displayName: "LecturerPage",
 
 module.exports = LecturerPage;
 
-},{"../../actions/lecturerActions":243,"../../stores/lecturerStore":258,"./LecturerList":250,"react":241,"react-router":39}],253:[function(require,module,exports){
+},{"../../actions/lecturerActions":244,"../../stores/lecturerStore":259,"./LecturerList":251,"react":241,"react-router":39}],254:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -54254,7 +54330,13 @@ var ManageLecturerPage = React.createClass({displayName: "ManageLecturerPage",
 
 	saveLecturer: function(event) {
 		event.preventDefault();
-		LecturerActions.createLecturer(this.state.lecturer);
+
+		if (this.state.lecturer.id){
+			LecturerActions.updateLecturer(this.state.lecturer);
+		}
+		else{
+			LecturerActions.createLecturer(this.state.lecturer);
+		}
 		appHistory.push('/lecturers')
 	},
 
@@ -54270,19 +54352,21 @@ var ManageLecturerPage = React.createClass({displayName: "ManageLecturerPage",
 
 module.exports = ManageLecturerPage;
 
-},{"../../actions/lecturerActions":243,"../../stores/lecturerStore":258,"./lecturerForm":251,"react":241,"react-router":39,"react-router/lib/useRouterHistory":45,"react-router/node_modules/history/lib/createHashHistory":56}],254:[function(require,module,exports){
+},{"../../actions/lecturerActions":244,"../../stores/lecturerStore":259,"./lecturerForm":252,"react":241,"react-router":39,"react-router/lib/useRouterHistory":45,"react-router/node_modules/history/lib/createHashHistory":56}],255:[function(require,module,exports){
 'use strict';
 
 module.exports = {
     CREATE_LECTURER: 'CREATE_LECTURER',
+    UPDATE_LECTURER: 'UPDATE_LECTURER',
+    DELETE_LECTURER: 'DELETE_LECTURER',
     INITIALIZE: 'INITIALIZE'
 };
 
-},{}],255:[function(require,module,exports){
+},{}],256:[function(require,module,exports){
 var Dispatcher = require('flux').Dispatcher;
 
 module.exports = new Dispatcher;
-},{"flux":3}],256:[function(require,module,exports){
+},{"flux":3}],257:[function(require,module,exports){
 $ = jQuery = require('jquery');
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -54300,8 +54384,7 @@ ReactDOM.render((
         routes
     )
 ), document.getElementById('app'));
-
-},{"./actions/initializeActions":242,"./routes":257,"jquery":6,"react":241,"react-dom":9,"react-router":39,"react-router/lib/useRouterHistory":45,"react-router/node_modules/history/lib/createHashHistory":56}],257:[function(require,module,exports){
+},{"./actions/initializeActions":243,"./routes":258,"jquery":6,"react":241,"react-dom":9,"react-router":39,"react-router/lib/useRouterHistory":45,"react-router/node_modules/history/lib/createHashHistory":56}],258:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -54322,7 +54405,7 @@ var routes = (
 
 module.exports = routes;
 
-},{"./components/about/aboutPage":246,"./components/app":247,"./components/homePage":249,"./components/lecturers/lecturerPage":252,"./components/lecturers/manageLecturerPage":253,"react":241,"react-router":39}],258:[function(require,module,exports){
+},{"./components/about/aboutPage":247,"./components/app":248,"./components/homePage":250,"./components/lecturers/lecturerPage":253,"./components/lecturers/manageLecturerPage":254,"react":241,"react-router":39}],259:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('../dispatcher/appDispatcher');
@@ -54366,6 +54449,18 @@ Dispatcher.register(function(action){
             _lecturers.push(action.lecturer);
             LecturerStore.emitChange();
             break;
+        case ActionTypes.UPDATE_LECTURER:
+            var existingLecturer = _.find(_lecturers, {id: action.lecturer.id});
+            var elIndex = _.indexOf(_lecturers, existingLecturer);
+            _lecturers.splice(elIndex, 1, action.lecturer);
+            LecturerStore.emitChange();
+            break;
+        case ActionTypes.DELETE_LECTURER:
+            _.remove(_lecturers, function(lecturer){
+                return action.id === lecturer.id;
+            });
+            LecturerStore.emitChange();
+            break;
         default:
             //no op
     }
@@ -54373,4 +54468,4 @@ Dispatcher.register(function(action){
 
 module.exports = LecturerStore;
 
-},{"../constants/actionTypes":254,"../dispatcher/appDispatcher":255,"events":1,"lodash":7,"object-assign":8}]},{},[256]);
+},{"../constants/actionTypes":255,"../dispatcher/appDispatcher":256,"events":1,"lodash":7,"object-assign":8}]},{},[257]);

@@ -41,6 +41,18 @@ Dispatcher.register(function(action){
             _lecturers.push(action.lecturer);
             LecturerStore.emitChange();
             break;
+        case ActionTypes.UPDATE_LECTURER:
+            var existingLecturer = _.find(_lecturers, {id: action.lecturer.id});
+            var elIndex = _.indexOf(_lecturers, existingLecturer);
+            _lecturers.splice(elIndex, 1, action.lecturer);
+            LecturerStore.emitChange();
+            break;
+        case ActionTypes.DELETE_LECTURER:
+            _.remove(_lecturers, function(lecturer){
+                return action.id === lecturer.id;
+            });
+            LecturerStore.emitChange();
+            break;
         default:
             //no op
     }
